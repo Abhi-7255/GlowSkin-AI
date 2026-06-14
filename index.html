@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowSkin - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">✨</span> GlowSkin
+            </a>
+            
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/skin-analysis.html">Analysis</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Welcome to GlowSkin 🌟</h1>
+        <p>Your AI-powered personal skin care assistant. Upload a photo of your face, and our intelligent system will analyze your skin type and provide custom remedies and product recommendations.</p>
+        <p>No login required. Fast, free, and completely private.</p>
+        <a href="/skin-analysis.html" class="btn">Try Skin Analysis Now</a>
+    </div>
+    <footer>
+        <p>Developed by Abhiranjan &copy; 2026</p>
+    </footer>
+</body>
+</html>

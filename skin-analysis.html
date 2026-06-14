@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowSkin - AI Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+     <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">✨</span> GlowSkin
+            </a>
+            
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/skin-analysis.html">Analysis</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>AI Skin Analysis</h2>
+        <p>Choose an option below to analyze your skin.</p>
+        
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+            <h3>Option 1: Upload a Photo</h3>
+            <form id="uploadForm">
+                <input type="file" id="imageInput" accept="image/*" required>
+                <br><br>
+                <button type="submit">Analyze Uploaded Photo</button>
+            </form>
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+            <h3>Option 2: Take a Live Selfie</h3>
+            <button type="button" id="start-camera-btn">Open Camera</button>
+            
+            <video id="webcam-video" autoplay playsinline style="display:none; width: 100%; max-width: 400px; border-radius: 8px; margin-top: 10px;"></video>
+            
+            <br>
+            <button type="button" id="snap-btn" style="display:none; margin-top: 10px; background-color: #ff6b6b; color: white;">📸 Snap & Analyze</button>
+            
+            <canvas id="webcam-canvas" style="display:none;"></canvas>
+        </div>
+
+        <div id="loading" style="display:none; font-weight: bold; margin-top: 20px;">Processing image... Please wait...</div>
+
+        <div id="results" style="display:none; margin-top: 20px;">
+            <h3>Result: <span id="skinType"></span> (<span id="confidenceScore"></span>)</h3>
+            <p id="skinDescription"></p>
+            
+            <h4>Recommended Home Remedies</h4>
+            <ul id="remediesList"></ul>
+
+            <h4>Recommended Product Types</h4>
+            <ul id="productsList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Get references to our loading and results sections
+        const loadingDiv = document.getElementById('loading');
+        const resultsDiv = document.getElementById('results');
+
+        // =====================================
+        // UNIFIED FUNCTION TO SEND TO PYTHON
+        // =====================================
+        async function sendToPython(formData) {
+            loadingDiv.style.display = 'block';
+            resultsDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                loadingDiv.style.display = 'none';
+
+                if (data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    // Populate your existing HTML elements with the AI data
+                    document.getElementById('skinType').innerText = data.result;
+                    document.getElementById('confidenceScore').innerText = data.confidence;
+                    document.getElementById('skinDescription').innerText = data.description;
+                    
+                    const remediesList = document.getElementById('remediesList');
+                    remediesList.innerHTML = '';
+                    data.remedies.forEach(item => {
+                        let li = document.createElement('li');
+                        li.innerText = item;
+                        remediesList.appendChild(li);
+                    });
+
+                    const productsList = document.getElementById('productsList');
+                    productsList.innerHTML = '';
+                    data.products.forEach(item => {
+                        let li = document.createElement('li');
+                        li.innerText = item;
+                        productsList.appendChild(li);
+                    });
+
+                    resultsDiv.style.display = 'block';
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                alert('Something went wrong. Please check your backend connection.');
+            }
+        }
+
+        // =====================================
+        // OPTION 1 TRIGGER (FORM SUBMIT)
+        // =====================================
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput.files.length === 0) return;
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            sendToPython(formData);
+        });
+
+        // =====================================
+        // OPTION 2 TRIGGER (WEBCAM)
+        // =====================================
+        const startCameraBtn = document.getElementById('start-camera-btn');
+        const video = document.getElementById('webcam-video');
+        const snapBtn = document.getElementById('snap-btn');
+        const canvas = document.getElementById('webcam-canvas');
+        let stream;
+
+        // Turn on camera
+        startCameraBtn.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                video.srcObject = stream;
+                video.style.display = "block";
+                snapBtn.style.display = "inline-block";
+                startCameraBtn.style.display = "none";
+            } catch (err) {
+                alert("Camera access denied or not available on this device.");
+            }
+        });
+
+        // Take photo and send
+        snapBtn.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert picture to blob and send it
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
+                formData.append('file', blob, 'selfie.jpg');
+                
+                sendToPython(formData);
+
+                // Turn off camera after snapping
+                stream.getTracks().forEach(track => track.stop());
+                video.style.display = "none";
+                snapBtn.style.display = "none";
+                startCameraBtn.style.display = "inline-block";
+                startCameraBtn.innerText = "Take Another Selfie";
+
+            }, 'image/jpeg');
+        });
+    </script>
+    <footer>
+       <p>Developed by Abhiranjan &copy; 2026</p>
+    </footer>
+</body>
+</html

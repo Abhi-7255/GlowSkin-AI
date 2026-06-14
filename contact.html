@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowSkin - Contact Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+     <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">✨</span> GlowSkin
+            </a>
+            
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/skin-analysis.html">Analysis</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 style="text-align: center;">Contact the GlowSkin Team</h2>
+        <p style="text-align: center;">Have a question? Send us a message and we'll email you back!</p>
+        
+        <form id="contactForm">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email Address:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button type="submit" id="submitBtn">Send Message</button>
+        </form>
+
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMsg = document.getElementById('statusMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Sending...";
+            statusMsg.innerText = "";
+            
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/send_email', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    statusMsg.innerText = "✅ Message sent successfully! Check your email.";
+                    statusMsg.style.color = "green";
+                    this.reset();
+                } else {
+                    statusMsg.innerText = "❌ Error: " + data.error;
+                    statusMsg.style.color = "red";
+                }
+            } catch (error) {
+                statusMsg.innerText = "❌ An error occurred. Please try again.";
+                statusMsg.style.color = "red";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Send Message";
+            }
+        });
+    </script>
+    <footer>
+        <p>Developed by Abhiranjan &copy; 2026</p>
+    </footer>
+</body>
+</html>

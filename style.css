@@ -1,0 +1,214 @@
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* --- Base Styles & Animated Background --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Soft animated gradient background */
+    background: linear-gradient(-45deg, #fdfbfb, #ffe4e1, #fff0f5, #ebedee);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #4a4a4a;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Navigation (Glassmorphism + Logo Layout) --- */
+nav {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between; /* Pushes logo left, links right */
+    align-items: center;
+}
+
+/* Logo Styling */
+.logo {
+    text-decoration: none;
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #ff1493;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.5px;
+}
+
+.logo-icon {
+    font-size: 1.2em;
+}
+
+/* Nav Links */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 25px;
+}
+
+nav a:not(.logo) {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 1.05em;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+nav a:not(.logo)::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #ff1493;
+    transition: all 0.3s ease;
+}
+
+nav a:not(.logo):hover { color: #ff1493; }
+nav a:not(.logo):hover::after { width: 100%; left: 0; }
+
+/* --- Main Container --- */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 45px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    text-align: center;
+    flex-grow: 1; /* Pushes footer to bottom */
+    opacity: 0; 
+    transform: translateY(20px); 
+    animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Typography --- */
+h1, h2, h3 { color: #ff1493; margin-top: 0; }
+p { line-height: 1.7; color: #666; font-size: 1.05em; }
+
+/* --- Buttons & Inputs --- */
+.btn, button {
+    display: inline-block;
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.05em;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 20, 147, 0.25);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover, button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(255, 20, 147, 0.4);
+}
+
+input[type="text"], input[type="email"], input[type="file"], textarea {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0 20px 0;
+    border: 2px solid #ffe4e1;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #ff69b4;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.1);
+}
+
+/* --- Analysis Results Box --- */
+#results {
+    display: none;
+    margin-top: 40px;
+    text-align: left;
+    background: linear-gradient(to right bottom, #fff0f5, #ffffff);
+    padding: 30px;
+    border-radius: 20px;
+    border-left: 6px solid #ff69b4;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+}
+
+#results ul {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+#results li {
+    margin-bottom: 8px;
+}
+
+/* --- Footer (Locked Size) --- */
+footer {
+    background-color: rgba(255, 228, 225, 0.8);
+    backdrop-filter: blur(5px);
+    color: #d11276;
+    text-align: center;
+    padding: 15px 0; /* Maintains a strict height */
+    margin-top: auto; /* Ensures it stays at the very bottom */
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    flex-shrink: 0; /* Prevents the footer from shrinking */
+}
+
+footer p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+}
+
+@keyframes rippleEffect {
+    0% {
+        width: 0px;
+        height: 0px;
+        opacity: 0.5;
+    }
+    100% {
+        width: 500px;
+        height: 500px;
+        opacity: 0;
+    }
+}

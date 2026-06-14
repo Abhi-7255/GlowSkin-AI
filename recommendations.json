@@ -1,0 +1,41 @@
+{
+  "Oily Skin": {
+    "description": "Your skin produces excess sebum, leading to a shiny appearance.",
+    "remedies": [
+      "Wash face twice daily with a foaming cleanser.",
+      "Use oil-free, non-comedogenic moisturizers.",
+      "Apply a clay mask once a week."
+    ],
+    "products": [
+      "Salicylic Acid Cleanser",
+      "Niacinamide Serum",
+      "Matte Sunscreen SPF 50"
+    ]
+  },
+  "Dry Skin": {
+    "description": "Your skin may feel tight, rough, or look flaky.",
+    "remedies": [
+      "Use a gentle, cream-based cleanser.",
+      "Apply moisturizer immediately after washing.",
+      "Avoid hot water showers."
+    ],
+    "products": [
+      "Hydrating Ceramide Cleanser",
+      "Hyaluronic Acid Serum",
+      "Rich Night Cream"
+    ]
+  },
+  "Normal Skin": {
+    "description": "Your skin is well-balanced and healthy.",
+    "remedies": [
+      "Maintain a consistent routine.",
+      "Wear sunscreen every day.",
+      "Exfoliate once a week."
+    ],
+    "products": [
+      "Gentle Daily Cleanser",
+      "Vitamin C Serum",
+      "Lightweight Moisturizer"
+    ]
+  }
+}
