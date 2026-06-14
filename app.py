@@ -5,7 +5,7 @@ import tensorflow as tf
 from PIL import Image, ImageOps
 import numpy as np
 import io
-import os
+import os from dotenv import load_dotenv
 import cv2
 import json
 import smtplib
@@ -14,14 +14,16 @@ from email.mime.multipart import MIMEMultipart
 
 # --- CONFIGURATION ---
 # Base directory set to the folder containing this app.py file
+load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_PATH = os.path.join(BASE_DIR, 'skin_model.keras')
 JSON_PATH = os.path.join(BASE_DIR, 'recommendations.json')
 
 # Email Config
-SENDER_EMAIL = "glowskinapp02@gmail.com"
-SENDER_PASSWORD = "qlti dyaf kyfd rbgz"
+SENDER_EMAIL = os.getenv("EMAIL_USER")
+SENDER_PASSWORD = os.getenv("EMAIL_PASS")
+
 
 # Initialize App (No templates/uploads folder needed)
 app = Flask(__name__, template_folder=BASE_DIR, static_folder=BASE_DIR, static_url_path='/assets')
